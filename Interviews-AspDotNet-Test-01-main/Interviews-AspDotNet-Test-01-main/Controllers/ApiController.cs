@@ -53,35 +53,9 @@ namespace edu_services.Controllers
             return Ok();
         }
 
-        /// <summary>
-        /// Add a student to Classroom
-        /// </summary>
-        /// <param name="student">Student object</param>
-        /// <returns></returns>
-        [HttpPost("Student")]
-        public IActionResult AddStudent(Student student)
-        {
-            try
-            {
-                if (_cache.TryGetValue("Class1", out var classRoom))
-                {
-                    var Currentclassroom = (Classroom<Teacher, Student>)classRoom;
-                    Currentclassroom.AddStudent(student);
-                    _cache.Set("Class1", Currentclassroom);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return BadRequest();
-            }
-            _logger.LogInformation("Student {0} added to the Classroom", student.Name);
-            return Ok();
-            
-        }
 
         /// <summary>
-        /// Add a student to Classroom
+        /// Add students to Classroom
         /// </summary>
         /// <param name="students">List of Student object</param>
         /// <returns></returns>
