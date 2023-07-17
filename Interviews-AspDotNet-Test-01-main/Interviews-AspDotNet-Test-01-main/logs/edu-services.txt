@@ -1,0 +1,11 @@
+2023-07-16 13:33:54.640 +02:00 [Information] Application started. Press Ctrl+C to shut down.
+2023-07-16 13:33:54.661 +02:00 [Information] Hosting environment: "Development"
+2023-07-16 13:33:54.665 +02:00 [Information] Content root path: "C:\Users\Admin\Downloads\Interviews-AspDotNet-Test-01-main\Interviews-AspDotNet-Test-01-main"
+2023-07-16 13:34:15.869 +02:00 [Error] Classroom contains no teacher.
+2023-07-16 22:28:23.123 +02:00 [Information] Application started. Press Ctrl+C to shut down.
+2023-07-16 22:28:23.134 +02:00 [Information] Hosting environment: "Development"
+2023-07-16 22:28:23.138 +02:00 [Information] Content root path: "C:\Users\Admin\Downloads\Interviews-AspDotNet-Test-01-main\Interviews-AspDotNet-Test-01-main"
+2023-07-17 10:15:53.737 +02:00 [Information] Application started. Press Ctrl+C to shut down.
+2023-07-17 10:15:53.759 +02:00 [Information] Hosting environment: "Development"
+2023-07-17 10:15:53.764 +02:00 [Information] Content root path: "C:\Users\Admin\Downloads\Interviews-AspDotNet-Test-01-main\Interviews-AspDotNet-Test-01-main"
+2023-07-17 10:16:06.927 +02:00 [Information] Stdent "Shri" added to the Classroom
