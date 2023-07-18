@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace edu_services.Controllers
@@ -14,7 +16,7 @@ namespace edu_services.Controllers
     public class ApiController : ControllerBase
     {
         private readonly ILogger<ApiController> _logger;
-        Classroom<Teacher, Student> classroom1 = new Classroom<Teacher, Student>();
+        Classroom<Teacher, Student> classRoom1 = new Classroom<Teacher, Student>();
         protected IMemoryCache _cache;
         public ApiController(ILogger<ApiController> logger, IMemoryCache cache)
         {
@@ -22,11 +24,11 @@ namespace edu_services.Controllers
             _cache = cache;
             if (!_cache.TryGetValue("Class1", out var classRoom))
             {
-                _cache.Set("Class1", classroom1);
+                _cache.Set("Class1", classRoom1);
             }
             else
             {
-                classroom1 = (Classroom<Teacher, Student>)classRoom;
+                classRoom1 = (Classroom<Teacher, Student>)classRoom;
             }
         }
 
@@ -42,8 +44,8 @@ namespace edu_services.Controllers
         {
             try
             {
-                classroom1.AddTeacher(teacher);
-                _cache.Set("Class1", classroom1);
+                classRoom1.AddTeacher(teacher);
+                _cache.Set("Class1", classRoom1);
             }
             catch (System.Exception ex)
             {
@@ -68,17 +70,17 @@ namespace edu_services.Controllers
             {
                 foreach (var student in students)
                 {
-                    classroom1.AddStudent(student);
+                    classRoom1.AddStudent(student);
                     _logger.LogInformation("Student {0} added to the Classroom", student.Name);
                 }
-                _cache.Set("Class1", classroom1);
+                _cache.Set("Class1", classRoom1);
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return BadRequest();
+                return BadRequest("Unable to add the Students");
             }
-            return Ok("Students added to Classroom");
+            return Ok(String.Format("Students: " + String.Join(", ", students.Select(s => s.Name)) + " added to the classroom"));
 
         }
 
@@ -93,7 +95,7 @@ namespace edu_services.Controllers
             (Teacher, List<Student>) roster = new();
             try
             {
-                roster = classroom1.GetRoster();
+                roster = classRoom1.GetRoster();
             }
             catch (System.Exception ex)
             {
