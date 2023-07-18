@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text;
 
 namespace edu_services.Controllers
 {
@@ -18,10 +19,14 @@ namespace edu_services.Controllers
         public ApiController(ILogger<ApiController> logger, IMemoryCache cache)
         {
             _logger = logger;
-            _cache= cache;
+            _cache = cache;
             if (!_cache.TryGetValue("Class1", out var classRoom))
             {
                 _cache.Set("Class1", classroom1);
+            }
+            else
+            {
+                classroom1 = (Classroom<Teacher, Student>)classRoom;
             }
         }
 
@@ -37,20 +42,17 @@ namespace edu_services.Controllers
         {
             try
             {
-                if (_cache.TryGetValue("Class1", out var classRoom))
-                {
-                    var Currentclassroom = (Classroom<Teacher, Student>)classRoom;
-                    Currentclassroom.AddTeacher(teacher);
-                    _cache.Set("Class1", Currentclassroom);
-                }
+                classroom1.AddTeacher(teacher);
+                _cache.Set("Class1", classroom1);
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return BadRequest();
             }
-            _logger.LogInformation("Teacher {0} added to the Classroom", teacher.TeacherName);
-            return Ok();
+            string message = $"Teacher '{teacher.TeacherName}' added to the Classroom";
+            _logger.LogInformation(message);
+            return Ok(message);
         }
 
 
@@ -64,23 +66,19 @@ namespace edu_services.Controllers
         {
             try
             {
-                if (_cache.TryGetValue("Class1", out var classRoom))
+                foreach (var student in students)
                 {
-                    var Currentclassroom = (Classroom<Teacher, Student>)classRoom;
-                    foreach (var student in students)
-                    {
-                        Currentclassroom.AddStudent(student);
-                        _logger.LogInformation("Student {0} added to the Classroom", student.Name);
-                    }
-                    _cache.Set("Class1", Currentclassroom);
+                    classroom1.AddStudent(student);
+                    _logger.LogInformation("Student {0} added to the Classroom", student.Name);
                 }
+                _cache.Set("Class1", classroom1);
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return BadRequest();
             }
-            return Ok();
+            return Ok("Students added to Classroom");
 
         }
 
@@ -91,25 +89,21 @@ namespace edu_services.Controllers
         [HttpGet("ClassroomRoster")]
         public ActionResult<Classroom<Teacher, Student>> GetClassroomRoster()
         {
-            
+
             (Teacher, List<Student>) roster = new();
             try
             {
-                if (_cache.TryGetValue("Class1", out var classRoom))
-                {
-                    var Currentclassroom = (Classroom<Teacher, Student>)classRoom;
-                    roster = Currentclassroom.GetRoster();
-                }
+                roster = classroom1.GetRoster();
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return NotFound();
+                return NotFound(ex.Message);
             }
 
             //changing the tuple to classroom object
-            Classroom<Teacher, Student> classRoster = new Classroom<Teacher, Student>(roster.Item2,roster.Item1);
-            
+            Classroom<Teacher, Student> classRoster = new Classroom<Teacher, Student>(roster.Item2, roster.Item1);
+
             //this will return the roster in Json format by default
             return Ok(classRoster);
 

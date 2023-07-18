@@ -52,7 +52,7 @@ namespace edu_services.Domain
             if (Teacher == null)
                 throw new Exception("Classroom contains no teacher.");
 
-            if (Students == null || Students.Count > 3)
+            if (Students == null || Students.Count < 3)
                 throw new Exception("Classroom does not contain 3 students.");
 
             return (Teacher, Students);
